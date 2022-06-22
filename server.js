@@ -3,6 +3,10 @@ const url = require('url');
 const fs = require('fs');
 require('dotenv').config();//allows us to use the environmental variables in .env
 const {PORT} = process.env;
+const {LINKEDIN} = process.env;
+const {TWITTER} = process.env;
+const {GITHUB} = process.env;
+
 
 //creating a server
 const server = http.createServer((req,res)=>
@@ -30,7 +34,12 @@ const server = http.createServer((req,res)=>
     //console.log(q);
     //console.log(filename);
 
-    //Switching between the different html pages
+    //pathname to different social pages
+    linkedin = process.env.LINKEDIN || LINKEDIN;
+    twitter = process.env.TWITTER || TWITTER;
+    github = process.env.GITHUB || GITHUB;
+
+    //Switching between the different html pages and social pages
     switch(path)
     {
         case '/':
@@ -45,16 +54,28 @@ const server = http.createServer((req,res)=>
         case '/about.html':
             loadHtml('about.html');
             break;
+        case '/linkedin':
+            res.writeHead(301,{location: 'http://www.linkedin.com/in/'+linkedin});
+            res.end();
+            break;
+        case '/twitter':
+            res.writeHead(301,{location: 'http://www.twitter.com/'+twitter});
+            res.end();
+            break;
+        case '/github':
+            res.writeHead(301,{location: 'http://www.github.com/'+github});
+            res.end();
+            break;
         default: 
             res.writeHead(404,{'Content-Type':'text/plain'});
             res.write("404 Not Found\nEnsure the URL is correct");
             res.end();
     }
+
       
 });
 
-//create a PORT and calling the hostname
+//create a PORT 
 const port = process.env.PORT||PORT;
-// const hostname = process.env.HOSTNAME||HOSTNAME 
 //Listening
 server.listen(port,'127.0.0.1',()=>console.log('Server is up and running...'));
